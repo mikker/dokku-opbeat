@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+set -aeo pipefail; [[ $DOKKU_TRACE ]] && set -x
+
+# DOKKU_ROOT=/home/dokku # for debugging
+
+if [ -f "$DOKKU_ROOT/$1/ENV" ]; then
+  source $DOKKU_ROOT/$1/ENV
+fi
+
+echo "-----> Checking for Opbeat credentials in ENV ..."
+
+[[ "$OPBEAT_ORGANIZATION_ID" = "" ]] && exit 0
+[[ "$OPBEAT_APP_ID" = "" ]]          && exit 0
+[[ "$OPBEAT_SECRET_TOKEN" = "" ]]    && exit 0
+
+echo "-----> Notifying Opbeat ..."
+
+rev=`cd $DOKKU_ROOT/$1 && git log -n 1 --pretty=format:%H`
+branch=`cd $DOKKU_ROOT/$1 && git rev-parse --abbrev-ref HEAD`
+url="https://opbeat.com/api/v1/organizations/$OPBEAT_ORGANIZATION_ID/apps/$OPBEAT_APP_ID/releases/"
+resp=`curl --silent --include \
+  $url \
+  -H "Authorization: Bearer $OPBEAT_SECRET_TOKEN" \
+  -d rev=$rev -d branch=$branch -d status=completed`
+status_code=`echo $resp | grep HTTP/1.1 | awk {'print $2'}`
+
+if [ $status_code -eq 202 ]; then
+  echo "=====> Opbeat successfully created release."
+else
+  echo "=====> Opbeat failed creating release:
+$resp"
+fi
