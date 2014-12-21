@@ -7,6 +7,9 @@ A plugin for [dokku](https://github.com/progrium/dokku) that notifies [Opbeat](h
 dokku-opbeat checks for the presence of three variables in your app's `ENV` and if they are all present it `curl`s Opbeat.
 
 ````sh
-$ dokku config:set appname OPBEAT_ORGANIZATION_ID=... OPBEAT_APP_ID=... OPBEAT_SECRET_TOKEN=...
+$ dokku config:set appname \
+  OPBEAT_ORGANIZATION_ID=... \
+  OPBEAT_APP_ID=... \
+  OPBEAT_SECRET_TOKEN=...
 ````
 
