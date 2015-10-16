@@ -1,0 +1,4 @@
+[plugin]
+description = "Opbeat release notify on deploy"
+version = "0.2.0"
+[plugin.config]
