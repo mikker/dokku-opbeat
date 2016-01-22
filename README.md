@@ -1,5 +1,7 @@
 # dokku-opbeat
 
+**NB: At the moment the plugin only includes commits up to and _not including_ the most recent one. That's not right but I haven't found the time to fix it yet. Would love a PR ❤️**
+
 A plugin for [dokku](https://github.com/progrium/dokku) that notifies [Opbeat](http://opbeat.com) with new releases.
 
 ## Setup
